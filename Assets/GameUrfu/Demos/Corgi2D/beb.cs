@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public string correctAnswer = "крипта"; // Замените на свой ответ
     public GameObject pauseSplash; // Ссылка на интерфейс паузы
     public BEEBRA checkpoint; // Ссылка на ваш чекпоинт
+    public GameObject backgroundObject; // Ссылка на объект с задним фоном
 
     private void Start()
     {
@@ -40,6 +41,12 @@ public class GameManager : MonoBehaviour
             // Скрываем Canvas с вопросом
             gameObject.SetActive(false);
 
+            // Скрываем объект с задним фоном
+            if (backgroundObject != null)
+            {
+                backgroundObject.SetActive(false);
+            }
+
             // Отключаем триггер
             if (checkpoint != null)
             {
@@ -65,6 +72,21 @@ public class GameManager : MonoBehaviour
         if (pauseSplash.activeSelf)
         {
             pauseSplash.SetActive(false);
+        }
+
+        // Показываем объект с задним фоном
+        if (backgroundObject != null)
+        {
+            backgroundObject.SetActive(true);
+        }
+    }
+
+    // Метод для обработки касания чекпоинта
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Checkpoint")) // Убедитесь, что чекпоинт имеет тег "Checkpoint"
+        {
+            ActivateQuiz(); // Активируем викторину, когда игрок касается чекпоинта
         }
     }
 }

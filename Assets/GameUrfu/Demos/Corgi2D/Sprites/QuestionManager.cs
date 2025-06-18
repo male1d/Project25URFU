@@ -8,6 +8,9 @@ public class QuestionManager : MonoBehaviour
     public TextMeshPro timerText; // Ссылка на текст таймера
     public GameObject[] platforms; // Массив платформ, которые нужно активировать или деактивировать
     public GameObject questionTrigger; // Ссылка на объект QuestionTrigger
+    public GameObject yellowKeyPicker; // Ссылка на YellowKeyPicker
+    public GameObject canvasToHide; // Ссылка на канвас, который нужно показать/скрыть
+
     public float questionDuration = 15f; // Время на ответ
     private bool questionActive = false; // Флаг активности вопроса
     private int currentQuestionIndex = 0; // Индекс текущего вопроса
@@ -27,6 +30,16 @@ public class QuestionManager : MonoBehaviour
         questionText.gameObject.SetActive(false);
         timerText.gameObject.SetActive(false);
         HidePlatforms(); // Скрываем платформы при старте
+
+        if (yellowKeyPicker != null)
+        {
+            yellowKeyPicker.SetActive(false); // Скрываем YellowKeyPicker
+        }
+
+        if (canvasToHide != null)
+        {
+            canvasToHide.SetActive(false); // Скрываем канвас на старте
+        }
     }
 
     public void StartQuestion()
@@ -83,6 +96,8 @@ public class QuestionManager : MonoBehaviour
                 Debug.Log("Поздравляем! Вы ответили на все вопросы.");
                 HidePlatforms(); // Скрываем платформы, если все ответы правильные
                 HideQuestionTrigger(); // Скрываем триггер
+                ActivateYellowKeyPicker(); // Активируем YellowKeyPicker
+                HideCanvas(); // Скрываем канвас по окончанию игры
             }
         }
         else
@@ -110,5 +125,48 @@ public class QuestionManager : MonoBehaviour
         {
             questionTrigger.SetActive(false); // Деактивируем QuestionTrigger
         }
+    }
+
+    private void ActivateYellowKeyPicker()
+    {
+        if (yellowKeyPicker != null)
+        {
+            yellowKeyPicker.SetActive(true); // Активируем YellowKeyPicker
+            Debug.Log("YellowKeyPicker активирован!");
+        }
+        else
+        {
+            Debug.LogError("YellowKeyPicker не назначен!");
+        }
+    }
+
+    private void ShowCanvas()
+    {
+        if (canvasToHide != null)
+        {
+            canvasToHide.SetActive(true); // Показываем канвас
+        }
+    }
+
+    private void HideCanvas()
+    {
+        if (canvasToHide != null)
+        {
+            canvasToHide.SetActive(false); // Скрываем канвас
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Проверяем, если игрок вошел в триггер
+        if (collision.CompareTag("Player")) // Убедитесь, что тег игрока действительно "Player"
+        {
+            ShowCanvas(); // Показываем канвас при входе триггера
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        // Оставим это пустым, чтобы канвас не скрывался при выходе игрока из триггера.
     }
 }
